@@ -1,15 +1,18 @@
 {
     "version": 2,
-    "builds": [
-      {
-        "src": "DD_Tours/manage.py",
-        "use": "@vercel/python"
+    "functions": {
+      "api/wsgi.py": {
+        "runtime": "python@3.10"
       }
-    ],
+    },
     "routes": [
       {
         "src": "/(.*)",
-        "dest": "DD_Tours/manage.py"
+        "dest": "DD_Tours/wsgi.py"
       }
-    ]
+    ],
+    "env": {
+      "DJANGO_SETTINGS_MODULE": "DD_Tours.settings"
+    }
   }
+  

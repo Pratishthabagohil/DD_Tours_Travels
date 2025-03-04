@@ -14,3 +14,6 @@ from django.core.wsgi import get_wsgi_application
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'DD_Tours.settings')
 
 application = get_wsgi_application()
+# Vercel serverless handler
+def handler(event, context):
+    return application(event, lambda *args, **kwargs: None)

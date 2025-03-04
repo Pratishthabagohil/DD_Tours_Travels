@@ -1,18 +1,24 @@
 {
     "version": 2,
-    "functions": {
-      "api/wsgi.py": {
-        "runtime": "python@3.10"
-      }
-    },
+    "builds": [
+        {
+            "src": "DD_Tours/wsgi.py",
+            "use": "@vercel/python",
+            "config": { "runtime": "python3.10" }
+        }
+    ],
     "routes": [
-      {
-        "src": "/(.*)",
-        "dest": "DD_Tours/wsgi.py"
-      }
+        {
+            "src": "/static/(.*)",
+            "dest": "/static/$1"
+        },
+        {
+            "src": "/(.*)",
+            "dest": "DD_Tours/wsgi.py"
+        }
     ],
     "env": {
-      "DJANGO_SETTINGS_MODULE": "DD_Tours.settings"
+        "DJANGO_SETTINGS_MODULE": "DD_Tours.settings",
+        "PYTHON_VERSION": "3.10"
     }
-  }
-  
+}

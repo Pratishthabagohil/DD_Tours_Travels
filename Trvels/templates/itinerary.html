@@ -1,0 +1,630 @@
+{% comment %} <!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Itinerary</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f5f5f5;
+      }
+      .itinerary {
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      .schedule-title {
+        color: #008eff;
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 15px;
+      }
+      .day-item {
+        display: flex;
+        align-items: flex-start;
+        border-left: 4px solid #008eff;
+        padding-left: 15px;
+        margin-bottom: 20px;
+      }
+      .day-indicator {
+        font-weight: bold;
+        color: #555;
+        font-size: 16px;
+      }
+      .day-content {
+        margin-left: 10px;
+      }
+      .day-title {
+        font-size: 20px;
+        font-weight: bold;
+      }
+      .day-date {
+        font-size: 14px;
+        color: #888;
+      }
+      .day-description {
+        font-size: 14px;
+        color: #666;
+      }
+      .know-more {
+        color: #008eff;
+        font-weight: bold;
+        cursor: pointer;
+        text-decoration: none;
+      }
+      .popup {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+      }
+      .popup-content {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        width: 40%;
+        text-align: center;
+      }
+      .close {
+        float: right;
+        font-size: 20px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="itinerary">
+      <div class="schedule-title">Kashmir Itinerary</div>
+
+      <div class="day-item">
+        <span class="day-indicator">DAY 1</span>
+        <div class="day-content">
+          <div class="day-title">Arrival in Srinagar</div>
+          <div class="day-date">MAR 10, 2025</div>
+          <div class="day-description">
+            Arrival at Srinagar, houseboat check-in, Shikara ride
+            <a class="know-more" onclick="openPopup('day1')">Know more →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="day-item">
+        <span class="day-indicator">DAY 2</span>
+        <div class="day-content">
+          <div class="day-title">Gulmarg Adventure</div>
+          <div class="day-date">MAR 11, 2025</div>
+          <div class="day-description">
+            Explore the scenic Gulmarg, enjoy a Gondola ride, and try skiing
+            <a class="know-more" onclick="openPopup('day2')">Know more →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="day-item">
+        <span class="day-indicator">DAY 3</span>
+        <div class="day-content">
+          <div class="day-title">Pahalgam Exploration</div>
+          <div class="day-date">MAR 12, 2025</div>
+          <div class="day-description">
+            Visit Betaab Valley, Aru Valley, and the Lidder River
+            <a class="know-more" onclick="openPopup('day3')">Know more →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="day-item">
+        <span class="day-indicator">DAY 4</span>
+        <div class="day-content">
+          <div class="day-title">Sonmarg Excursion</div>
+          <div class="day-date">MAR 13, 2025</div>
+          <div class="day-description">
+            Enjoy the beauty of Sonmarg, visit Thajiwas Glacier
+            <a class="know-more" onclick="openPopup('day4')">Know more →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="day-item">
+        <span class="day-indicator">DAY 5</span>
+        <div class="day-content">
+          <div class="day-title">Doodhpathri Visit</div>
+          <div class="day-date">MAR 14, 2025</div>
+          <div class="day-description">
+            Explore the lush meadows and streams of Doodhpathri
+            <a class="know-more" onclick="openPopup('day5')">Know more →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="day-item">
+        <span class="day-indicator">DAY 6</span>
+        <div class="day-content">
+          <div class="day-title">Yusmarg Day Trip</div>
+          <div class="day-date">MAR 15, 2025</div>
+          <div class="day-description">
+            Hike through forests, enjoy breathtaking landscapes
+            <a class="know-more" onclick="openPopup('day6')">Know more →</a>
+          </div>
+        </div>
+      </div>
+      {% if location.brochure %}
+      <a href="{{ location.brochure.url }}" class="btn-brochure" download
+        >Download Brochure</a
+      >
+      {% endif %}
+    </div>
+
+    <div id="popup-modal" class="popup">
+      <div class="popup-content">
+        <span class="close" onclick="closePopup()">&times;</span>
+        <h4 id="popup-title"></h4>
+        <p id="popup-details"></p>
+      </div>
+    </div>
+
+    <script>
+      function openPopup(day) {
+        const details = {
+          day1: {
+            title: "Arrival in Srinagar",
+            info: "Arrival at Srinagar, check-in at houseboat, and relax with a beautiful Shikara ride in Dal Lake.",
+          },
+          day2: {
+            title: "Gulmarg Adventure",
+            info: "Travel to Gulmarg, enjoy a Gondola ride, and experience skiing on the pristine slopes.",
+          },
+          day3: {
+            title: "Pahalgam Exploration",
+            info: "Visit Betaab Valley, Aru Valley, and the scenic Lidder River for a serene experience.",
+          },
+          day4: {
+            title: "Sonmarg Excursion",
+            info: "Enjoy breathtaking landscapes in Sonmarg and visit the famous Thajiwas Glacier.",
+          },
+          day5: {
+            title: "Doodhpathri Visit",
+            info: "Explore the lush meadows, pine forests, and streams of Doodhpathri.",
+          },
+          day6: {
+            title: "Yusmarg Day Trip",
+            info: "Enjoy a peaceful day trip to Yusmarg with picturesque hiking trails.",
+          },
+        };
+        document.getElementById("popup-title").innerText = details[day].title;
+        document.getElementById("popup-details").innerText = details[day].info;
+        document.getElementById("popup-modal").style.display = "flex";
+      }
+      function closePopup() {
+        document.getElementById("popup-modal").style.display = "none";
+      }
+    </script>
+  </body>
+</html> {% endcomment %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Itinerary</title>
+   
+
+{% if itinerary %}
+<!-- Itinerary CSS -->
+<style>
+    /* Itinerary Container */
+    .itinerary-container {
+        margin: 40px 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    /* Section Title */
+    .itinerary-title {
+        text-align: center;
+        margin-bottom: 30px;
+        position: relative;
+    }
+    
+    .itinerary-title h2 {
+        font-size: 28px;
+        color: #333;
+        margin: 0;
+        padding-bottom: 15px;
+    }
+    
+    .itinerary-title h2:after {
+        content: "";
+        position: absolute;
+        width: 80px;
+        height: 3px;
+        background-color: #3498db;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    
+    /* Overview Section */
+    .itinerary-overview {
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        padding: 25px;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        margin-bottom: 30px;
+    }
+    
+    .overview-title {
+        font-size: 22px;
+        color: #2c3e50;
+        margin: 0 0 20px 0;
+        display: flex;
+        align-items: center;
+    }
+    
+    .overview-title span {
+        background-color: #3498db;
+        color: white;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 10px;
+        font-size: 16px;
+    }
+    
+    .overview-list {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .overview-list li {
+        padding: 12px 15px;
+        border-left: 3px solid #3498db;
+        margin-bottom: 10px;
+        background-color: white;
+        border-radius: 0 4px 4px 0;
+        transition: all 0.3s ease;
+    }
+    
+    .overview-list li:hover {
+        transform: translateX(5px);
+        box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+    }
+    
+    .day-number {
+        font-weight: bold;
+        color: #3498db;
+        margin-right: 10px;
+    }
+    
+    .btn-primary {
+        background-color: #3498db;
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 30px;
+        cursor: pointer;
+        font-weight: 600;
+        margin-top: 20px;
+        display: block;
+        transition: all 0.3s ease;
+        box-shadow: 0 3px 10px rgba(52, 152, 219, 0.3);
+        width: fit-content;
+    }
+    
+    .btn-primary:hover {
+        background-color: #2980b9;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+    }
+    
+    /* Detailed Itinerary */
+    .detailed-itinerary {
+        background-color: #fff;
+        border-radius: 8px;
+        padding: 30px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+    
+    /* Timeline */
+    .timeline-container {
+        position: relative;
+        padding-left: 40px;
+    }
+    
+    .timeline-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 20px;
+        width: 4px;
+        background-color: #e0e0e0;
+    }
+    
+    .timeline-block {
+        position: relative;
+        margin-bottom: 40px;
+    }
+    
+    .timeline-block:last-child {
+        margin-bottom: 0;
+    }
+    
+    .timeline-block::before {
+        content: '';
+        position: absolute;
+        left: -40px;
+        top: 0;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background-color: white;
+        border: 4px solid #3498db;
+        z-index: 1;
+    }
+    
+    .timeline-day {
+        margin-bottom: 15px;
+    }
+    
+    .timeline-day h3 {
+        color: #3498db;
+        margin: 0;
+        font-size: 22px;
+    }
+    
+    .timeline-day h4 {
+        margin: 5px 0 0;
+        font-weight: 500;
+        color: #555;
+        font-size: 18px;
+    }
+    
+    .timeline-content {
+        background-color: white;
+        border-radius: 5px;
+        padding: 20px;
+        box-shadow: 0 3px 15px rgba(0,0,0,0.05);
+        border-left: 3px solid #3498db;
+    }
+    
+    .timeline-content p {
+        margin-top: 0;
+        line-height: 1.6;
+        color: #555;
+    }
+    
+    /* Activities */
+    .day-activities {
+        margin-top: 20px;
+        border-top: 1px dashed #eee;
+        padding-top: 15px;
+    }
+    
+    .day-activities h5 {
+        margin: 0 0 15px 0;
+        color: #2c3e50;
+        font-size: 16px;
+    }
+    
+    .timeline-activities {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .timeline-activities li {
+        display: flex;
+        padding: 12px 0;
+        border-bottom: 1px solid #f1f1f1;
+    }
+    
+    .timeline-activities li:last-child {
+        border-bottom: none;
+    }
+    
+    .activity-time {
+        min-width: 90px;
+        font-weight: 600;
+        color: #3498db;
+        padding-right: 15px;
+        border-right: 2px solid #f1f1f1;
+    }
+    
+    .activity-description {
+        flex-grow: 1;
+        padding: 0 15px;
+        font-weight: 500;
+    }
+    
+    .activity-place {
+        color: #7f8c8d;
+        font-style: italic;
+    }
+    
+    /* Close Button */
+    .btn-secondary {
+        background-color: #7f8c8d;
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 30px;
+        cursor: pointer;
+        font-weight: 600;
+        margin-top: 20px;
+        display: block;
+        transition: all 0.3s ease;
+        box-shadow: 0 3px 10px rgba(127, 140, 141, 0.3);
+        width: fit-content;
+    }
+    
+    .btn-secondary:hover {
+        background-color: #6c7a7a;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(127, 140, 141, 0.4);
+    }
+    
+    /* Responsive Styles */
+    @media (max-width: 768px) {
+        .itinerary-overview,
+        .detailed-itinerary {
+            padding: 15px;
+        }
+        
+        .timeline-container {
+            padding-left: 30px;
+        }
+        
+        .timeline-container::before {
+            left: 15px;
+        }
+        
+        .timeline-block::before {
+            left: -30px;
+            width: 15px;
+            height: 15px;
+        }
+        
+        .timeline-activities li {
+            flex-direction: column;
+        }
+        
+        .activity-time {
+            border-right: none;
+            border-bottom: 1px solid #f1f1f1;
+            padding-bottom: 5px;
+            margin-bottom: 5px;
+        }
+        
+        .activity-description {
+            padding: 5px 0;
+        }
+    }
+</style>
+
+<div class="itinerary-container">
+    <div class="itinerary-title">
+        <h2>Tour Itinerary</h2>
+    </div>
+    
+    <!-- Simple Overview (Always Visible) -->
+    <div class="itinerary-overview">
+        <h3 class="overview-title"><span>{{ itinerary.days_count }}</span>{{ location.name }} - {{ itinerary.days_count }} Days Tour</h3>
+        <ul class="overview-list">
+            {% for day_data in days_with_activities %}
+            <li>
+                <span class="day-number">Day {{ day_data.day.day_number }}:</span> 
+                <span class="day-title">{{ day_data.day.short_description }}</span>
+            </li>
+            {% endfor %}
+        </ul>
+        <button id="show-detailed-itinerary" class="btn-primary">Show Detailed Itinerary</button>
+    </div>
+    
+    <!-- Detailed Itinerary (Hidden by Default) -->
+    <div id="detailed-itinerary" class="detailed-itinerary" style="display: none;">
+        <div class="timeline-container">
+            {% for day_data in days_with_activities %}
+            <div class="timeline-block">
+                <div class="timeline-day">
+                    <h3>Day {{ day_data.day.day_number }}</h3>
+                    <h4>{{ day_data.day.short_description }}</h4>
+                </div>
+                <div class="timeline-content">
+                    <p>{{ day_data.day.detailed_description }}</p>
+                    
+                    {% if day_data.activities %}
+                    <div class="day-activities">
+                        <h5>Day Schedule:</h5>
+                        <ul class="timeline-activities">
+                            {% for activity in day_data.activities %}
+                            <li>
+                                <span class="activity-time">{{ activity.time|time:"g:i A" }}</span>
+                                <span class="activity-description">{{ activity.activity_description }}</span>
+                                <span class="activity-place">@ {{ activity.place }}</span>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <button id="hide-detailed-itinerary" class="btn-secondary">Close Detailed Itinerary</button>
+    </div>
+</div>
+
+<!-- JavaScript for toggling detailed itinerary -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const showButton = document.getElementById('show-detailed-itinerary');
+    const hideButton = document.getElementById('hide-detailed-itinerary');
+    const detailedItinerary = document.getElementById('detailed-itinerary');
+    const overviewSection = document.querySelector('.itinerary-overview');
+    
+    // Show detailed itinerary
+    showButton.addEventListener('click', function() {
+        detailedItinerary.style.display = 'block';
+        
+        // Smooth scroll to detailed itinerary
+        setTimeout(function() {
+            detailedItinerary.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+        
+        // Add animation class (optional if you want to add animations)
+        detailedItinerary.classList.add('fade-in');
+    });
+    
+    // Hide detailed itinerary
+    hideButton.addEventListener('click', function() {
+        detailedItinerary.style.display = 'none';
+        
+        // Smooth scroll back to overview
+        overviewSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+    
+    // Highlight active day (optional enhancement)
+    const overviewItems = document.querySelectorAll('.overview-list li');
+    const timelineBlocks = document.querySelectorAll('.timeline-block');
+    
+    overviewItems.forEach((item, index) => {
+        item.addEventListener('mouseenter', function() {
+            // Highlight corresponding timeline block
+            if (timelineBlocks[index]) {
+                timelineBlocks[index].style.backgroundColor = '#f8f9fa';
+            }
+        });
+        
+        item.addEventListener('mouseleave', function() {
+            // Remove highlight
+            if (timelineBlocks[index]) {
+                timelineBlocks[index].style.backgroundColor = '';
+            }
+        });
+    });
+});
+</script>
+{% else %}
+<div class="no-itinerary" style="text-align: center; padding: 40px 20px; background-color: #f9f9f9; border-radius: 8px; margin: 20px 0;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#95a5a6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="8" x2="12" y2="12"></line>
+        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+    </svg>
+    <p style="margin-top: 15px; color: #7f8c8d; font-size: 16px;">No itinerary available for this location.</p>
+    <p style="color: #95a5a6; font-size: 14px;">Please check back later or contact our support team for more information.</p>
+</div>
+{% endif %}
+  </body>
+</html>

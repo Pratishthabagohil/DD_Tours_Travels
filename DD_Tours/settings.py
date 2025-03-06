@@ -140,44 +140,64 @@
 # CONTACT_EMAIL = 'gohilpratishtha57@gmail.com'  
 
 # CONTACT_EMAIL = 'gohilpratishtha57@gmail.com'  
-
+# settings.py
 import os
 from pathlib import Path
 import pymysql
 pymysql.install_as_MySQLdb()
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# Build paths
 BASE_DIR = Path(__file__).resolve().parent.parent
-TEMPLATE_DIR = BASE_DIR / 'Trvels' / 'templates'
+TEMPLATE_DIR = BASE_DIR / 'trvels' / 'templates'
 
-# Security Settings
-# IMPORTANT: Replace this with a secure, randomly generated secret key
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'your-very-secure-secret-key-here')
-
-# Debug should be False in production
+# Security
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-k483xsd(sz&2%%u)51%f&k18d_k+6y8&1h%+g!o2s&ss6^i6p^')
 DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True'
-
-# Allowed hosts for production
 ALLOWED_HOSTS = [
-    # Vercel-generated domain
-    'dd-tours-8udcdjdxv-pratishthabagohils-projects.vercel.app',
-    
-    # Your custom domain (if you have one)
-    # 'yourdomain.com',
-    
-    # Local development hosts
+    '.vercel.app',  # Allows all Vercel subdomains
     'localhost',
     '127.0.0.1',
-    
-    # Vercel's default subdomains
-    '.vercel.app',
-    
-    # Your project's Vercel preview domains
-    'dd-tours.vercel.app',
+    'dd-tours.vercel.app',  # Your Vercel domain
 ]
 
-# For extra flexibility, you can use environment variables
-ALLOWED_HOSTS += os.environ.get('EXTRA_ALLOWED_HOSTS', '').split(',')
+# Static files
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [BASE_DIR / 'trvels' / 'static']
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'  # For Whitenoise
+
+# Database (configure with environment variables for security)
+import os
+print("Loading DD_Tours/settings.py START")
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'railway',
+        'USER': 'root',
+        'PASSWORD': 'nvLpUZRZJGCSznysnPlcKFHIesZjpZIc',
+        'HOST': 'maglev.proxy.rlwy.net',
+        'PORT': '59729',
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        },
+    }
+}
+
+print("DATABASES set to:", DATABASES)
+
+# Ensure Whitenoise is configured correctly
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # Must be after SecurityMiddleware
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
 
 # Application definition
 INSTALLED_APPS = [
@@ -192,20 +212,9 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
-    'Trvels',
+    'trvels',
 ]
 
-MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'allauth.account.middleware.AccountMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-]
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
@@ -235,25 +244,6 @@ WSGI_APPLICATION = 'DD_Tours.wsgi.application'
 
 # Database Configuration
 # Use environment variables for database credentials
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.environ.get('DB_NAME', 'tours'),
-        'USER': os.environ.get('DB_USER', 'root'),
-        'PASSWORD': os.environ.get('DB_PASSWORD', ''),
-        'HOST': os.environ.get('DB_HOST', 'localhost'),
-        'PORT': os.environ.get('DB_PORT', '3306'),
-        'OPTIONS': {
-            'charset': 'utf8mb4',
-            'ssl': {
-                'ca': os.environ.get('DB_SSL_CA', ''),  # Optional SSL certificate path
-            },
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
-        },
-        'CONN_MAX_AGE': 3600,  # Connection persistent for 1 hour
-    }
-}
-
 # Authentication Settings
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
@@ -285,8 +275,6 @@ USE_I18N = True
 USE_TZ = True
 
 # Static and Media Files
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / 'Trvels' / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'  # Add this for production deployments
 
 MEDIA_URL = '/media/'
@@ -309,3 +297,4 @@ SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
+DEBUG = True

@@ -1,7 +1,8 @@
-__pycache__/
-*.sqlite3
-*.log
+/DD_Tours/__pycache__/
+*.pyc
+*.pyo
+*.pyd
 node_modules/
-venv/
-staticfiles/
-media/
+/Trvels/migrations/**/*
+/Trvels/migrations/__init__.py
+/Trvels/__pycache__/

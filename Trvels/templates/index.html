@@ -16,6 +16,18 @@
     <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
 <!-- Swiper JS -->
+<style>/* Hide horizontal scrollbar */
+    html, body {
+        overflow-x: hidden;
+        scrollbar-width: none; /* Firefox */
+    }
+    
+    /* Hide scrollbar for Webkit browsers */
+    html::-webkit-scrollbar,
+    body::-webkit-scrollbar {
+        display: none;
+    }
+    </style>
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
     <link href="https://fonts.googleapis.com/css2?family=Paytone+One&family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -47,7 +59,7 @@
     </div>
 </div>
 
-
+{% include 'chatbot.html' %}
 <!-- Background Video & Header -->
 <section class="allcontent">
     <!-- Background Video & Header -->

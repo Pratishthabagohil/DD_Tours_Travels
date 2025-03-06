@@ -27,7 +27,15 @@ def contact_view(request):
     return render(request, 'contact.html', {'form': form})
 
 def home(request):
-    locations = Location.objects.all()  # Fetch all locations
+    from django.db import connection
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT DATABASE();")
+        db_name = cursor.fetchone()[0]
+        print(f"Current database: {db_name}")
+        cursor.execute("SHOW TABLES;")
+        tables = cursor.fetchall()
+        print(f"Tables in {db_name}: {tables}")
+    locations = Location.objects.all()
     return render(request, 'index.html', {'locations': locations})
 
 def about(request):
